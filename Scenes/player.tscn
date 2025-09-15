@@ -1,6 +1,7 @@
-[gd_scene load_steps=51 format=3 uid="uid://bjdxbvqcarpsq"]
+[gd_scene load_steps=56 format=3 uid="uid://bjdxbvqcarpsq"]
 
 [ext_resource type="Script" uid="uid://c2aep13oy686y" path="res://Scripts/player.gd" id="1_vgqql"]
+[ext_resource type="Texture2D" uid="uid://b6ligaj0erl7t" path="res://Assets/2D-Pixel-Art-Character-Template/Hurt-Damaged/Player Hurt 48x48.png" id="2_3smsa"]
 [ext_resource type="Texture2D" uid="uid://cj3u1slio58tg" path="res://Assets/2D-Pixel-Art-Character-Template/Idle/Player Idle 48x48.png" id="2_fkybt"]
 [ext_resource type="Texture2D" uid="uid://d5svg3yyk813" path="res://Assets/2D-Pixel-Art-Character-Template/Dash/dash.png" id="2_x3wgy"]
 [ext_resource type="Texture2D" uid="uid://cs330g6ny5d8n" path="res://Assets/2D-Pixel-Art-Character-Template/Jump/player jump left 48x48-sheet.png" id="3_vgqql"]
@@ -9,6 +10,22 @@
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_onrkg"]
 size = Vector2(19, 29)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_11gg7"]
+atlas = ExtResource("2_3smsa")
+region = Rect2(0, 0, 48, 48)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_qpa8y"]
+atlas = ExtResource("2_3smsa")
+region = Rect2(48, 0, 48, 48)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_sbwqj"]
+atlas = ExtResource("2_3smsa")
+region = Rect2(96, 0, 48, 48)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_xwi16"]
+atlas = ExtResource("2_3smsa")
+region = Rect2(144, 0, 48, 48)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_y6uwr"]
 atlas = ExtResource("2_x3wgy")
@@ -182,6 +199,23 @@ region = Rect2(336, 0, 48, 48)
 animations = [{
 "frames": [{
 "duration": 1.0,
+"texture": SubResource("AtlasTexture_11gg7")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_qpa8y")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_sbwqj")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_xwi16")
+}],
+"loop": true,
+"name": &"Damage",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
 "texture": SubResource("AtlasTexture_y6uwr")
 }, {
 "duration": 1.0,
@@ -341,4 +375,4 @@ shape = SubResource("RectangleShape2D_onrkg")
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
 sprite_frames = SubResource("SpriteFrames_urp6f")
-animation = &"Dash"
+animation = &"Damage"

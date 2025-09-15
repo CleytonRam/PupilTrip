@@ -6,6 +6,11 @@ extends CharacterBody2D
 
 @onready var animatedSprite = $AnimatedSprite2D
 
+# Sistema de prioridade de animações
+var animationPriority: int = 0
+var currentAnimation: String = ""
+var isAnimationLocked: bool = false
+
 # Sistema de habilidades desbloqueadas (permanentes)
 var unlockedAbilities: Dictionary = {
     "coke_dash": false,
@@ -125,7 +130,7 @@ func performDash():
         dashTimer = dashDuration
         
         # Toca a animação de dash
-        animatedSprite.play("Dash")
+        playAnimationWithPriority("Dash", 5)
         
         # Cria efeito visual
         createDashEffect()
@@ -169,8 +174,32 @@ func createUnlockEffect(abilityType: String):
     # Efeito visual quando desbloqueia uma habilidade
     print("Efeito de desbloqueio para: ", abilityType)
 
+func playAnimationWithPriority(animationName: String, priority: int = 0) -> bool:
+    # Se já está tocando uma animação de maior prioridade, ignora
+    if priority < animationPriority and isAnimationLocked:
+        return false
+    
+    # Se a animação não existe, ignora
+    if not animatedSprite.sprite_frames.has_animation(animationName):
+        print("Animação não encontrada: ", animationName)
+        return false
+    
+    # Se é a mesma animação atual, não precisa trocar
+    if animationName == currentAnimation:
+        return true
+    
+    # Troca para a nova animação
+    currentAnimation = animationName
+    animationPriority = priority
+    animatedSprite.play(animationName)
+    
+    return true
+func reset_animation_priority():
+    animationPriority = 0
+    isAnimationLocked = false
 func updateAnimation(direction):
-    if isDashing:
+    # Não atualiza animação se estiver em animação de alta prioridade
+    if animationPriority > 1:  # Prioridades > 1 bloqueiam animações normais
         return
     
     var animationToPlay = ""
@@ -182,7 +211,8 @@ func updateAnimation(direction):
         animationToPlay = "Idle"
     
     if animatedSprite.animation != animationToPlay:
-        animatedSprite.play(animationToPlay)
+        # Usa prioridade baixa (1) para animações normais
+        playAnimationWithPriority(animationToPlay, 1)
     
     if direction > 0:
         animatedSprite.flip_h = false
