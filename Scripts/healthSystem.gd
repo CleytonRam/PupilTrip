@@ -1,5 +1,5 @@
-extends Node
 
+extends Node
 class_name HealthSystem
 
 signal healthChanged(currentHealth, maxHealth)
@@ -36,7 +36,8 @@ func takeDamage(amount: int) -> bool:
     
     invincibilityTimer = invincibilityTime
     return false
-func restore_health(amount: int) -> bool:
+
+func restoreHealth(amount: int) -> bool:
     if currentHealth >= maxHealth:
         return false
         

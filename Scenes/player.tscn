@@ -1,4 +1,4 @@
-[gd_scene load_steps=56 format=3 uid="uid://bjdxbvqcarpsq"]
+[gd_scene load_steps=58 format=3 uid="uid://bjdxbvqcarpsq"]
 
 [ext_resource type="Script" uid="uid://c2aep13oy686y" path="res://Scripts/player.gd" id="1_vgqql"]
 [ext_resource type="Texture2D" uid="uid://b6ligaj0erl7t" path="res://Assets/2D-Pixel-Art-Character-Template/Hurt-Damaged/Player Hurt 48x48.png" id="2_3smsa"]
@@ -7,6 +7,8 @@
 [ext_resource type="Texture2D" uid="uid://cs330g6ny5d8n" path="res://Assets/2D-Pixel-Art-Character-Template/Jump/player jump left 48x48-sheet.png" id="3_vgqql"]
 [ext_resource type="Texture2D" uid="uid://0mn3phe6r6ge" path="res://Assets/2D-Pixel-Art-Character-Template/Land/player land 48x48.png" id="4_fkybt"]
 [ext_resource type="Texture2D" uid="uid://bni4p62y45k4" path="res://Assets/2D-Pixel-Art-Character-Template/Run/player run 48x48.png" id="5_fkybt"]
+[ext_resource type="Script" uid="uid://dfopw601oo013" path="res://Scripts/playerHealthSystem.gd" id="8_8erm5"]
+[ext_resource type="Script" uid="uid://c05yj1e2u46bi" path="res://Scripts/healthSystem.gd" id="9_f1ek2"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_onrkg"]
 size = Vector2(19, 29)
@@ -376,3 +378,10 @@ shape = SubResource("RectangleShape2D_onrkg")
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
 sprite_frames = SubResource("SpriteFrames_urp6f")
 animation = &"Damage"
+
+[node name="PlayerHealthSystem" type="Node" parent="." node_paths=PackedStringArray("healthSystem")]
+script = ExtResource("8_8erm5")
+healthSystem = NodePath("../HealthSystem")
+
+[node name="HealthSystem" type="Node" parent="."]
+script = ExtResource("9_f1ek2")
