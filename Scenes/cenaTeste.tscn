@@ -531,3 +531,5 @@ target = NodePath("../CharacterBody2D")
 [node name="Collectible" parent="." instance=ExtResource("5_rnicq")]
 position = Vector2(520, 308)
 abilityType = "coke_dash"
+
+[editable path="CharacterBody2D"]

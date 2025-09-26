@@ -1,4 +1,4 @@
-[gd_scene load_steps=58 format=3 uid="uid://bjdxbvqcarpsq"]
+[gd_scene load_steps=60 format=3 uid="uid://bjdxbvqcarpsq"]
 
 [ext_resource type="Script" uid="uid://c2aep13oy686y" path="res://Scripts/player.gd" id="1_vgqql"]
 [ext_resource type="Texture2D" uid="uid://b6ligaj0erl7t" path="res://Assets/2D-Pixel-Art-Character-Template/Hurt-Damaged/Player Hurt 48x48.png" id="2_3smsa"]
@@ -9,6 +9,7 @@
 [ext_resource type="Texture2D" uid="uid://bni4p62y45k4" path="res://Assets/2D-Pixel-Art-Character-Template/Run/player run 48x48.png" id="5_fkybt"]
 [ext_resource type="Script" uid="uid://dfopw601oo013" path="res://Scripts/playerHealthSystem.gd" id="8_8erm5"]
 [ext_resource type="Script" uid="uid://c05yj1e2u46bi" path="res://Scripts/healthSystem.gd" id="9_f1ek2"]
+[ext_resource type="Shader" uid="uid://ckhfjeggh3qnq" path="res://Assets/Materials/Shaders/new_shader.gdshader" id="9_tx1dd"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_onrkg"]
 size = Vector2(19, 29)
@@ -368,6 +369,11 @@ animations = [{
 "speed": 10.0
 }]
 
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_gymyn"]
+shader = ExtResource("9_tx1dd")
+shader_parameter/intensity = 0.736
+shader_parameter/flash_color = Color(1, 0, 0, 1)
+
 [node name="CharacterBody2D" type="CharacterBody2D"]
 script = ExtResource("1_vgqql")
 
@@ -379,9 +385,9 @@ shape = SubResource("RectangleShape2D_onrkg")
 sprite_frames = SubResource("SpriteFrames_urp6f")
 animation = &"Damage"
 
-[node name="PlayerHealthSystem" type="Node" parent="." node_paths=PackedStringArray("healthSystem")]
+[node name="PlayerHealthSystem" type="Node" parent="."]
 script = ExtResource("8_8erm5")
-healthSystem = NodePath("../HealthSystem")
+flashMaterial = SubResource("ShaderMaterial_gymyn")
 
 [node name="HealthSystem" type="Node" parent="."]
 script = ExtResource("9_f1ek2")
