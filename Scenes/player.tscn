@@ -1,4 +1,4 @@
-[gd_scene load_steps=60 format=3 uid="uid://bjdxbvqcarpsq"]
+[gd_scene load_steps=67 format=3 uid="uid://bjdxbvqcarpsq"]
 
 [ext_resource type="Script" uid="uid://c2aep13oy686y" path="res://Scripts/player.gd" id="1_vgqql"]
 [ext_resource type="Texture2D" uid="uid://b6ligaj0erl7t" path="res://Assets/2D-Pixel-Art-Character-Template/Hurt-Damaged/Player Hurt 48x48.png" id="2_3smsa"]
@@ -6,6 +6,7 @@
 [ext_resource type="Texture2D" uid="uid://d5svg3yyk813" path="res://Assets/2D-Pixel-Art-Character-Template/Dash/dash.png" id="2_x3wgy"]
 [ext_resource type="Texture2D" uid="uid://cs330g6ny5d8n" path="res://Assets/2D-Pixel-Art-Character-Template/Jump/player jump left 48x48-sheet.png" id="3_vgqql"]
 [ext_resource type="Texture2D" uid="uid://0mn3phe6r6ge" path="res://Assets/2D-Pixel-Art-Character-Template/Land/player land 48x48.png" id="4_fkybt"]
+[ext_resource type="Texture2D" uid="uid://csmuj2tc82l36" path="res://Assets/2D-Pixel-Art-Character-Template/Jump/player jump left 48x48-sheetDouble.png" id="4_gymyn"]
 [ext_resource type="Texture2D" uid="uid://bni4p62y45k4" path="res://Assets/2D-Pixel-Art-Character-Template/Run/player run 48x48.png" id="5_fkybt"]
 [ext_resource type="Script" uid="uid://dfopw601oo013" path="res://Scripts/playerHealthSystem.gd" id="8_8erm5"]
 [ext_resource type="Script" uid="uid://c05yj1e2u46bi" path="res://Scripts/healthSystem.gd" id="9_f1ek2"]
@@ -65,6 +66,30 @@ region = Rect2(336, 0, 48, 48)
 [sub_resource type="AtlasTexture" id="AtlasTexture_8gxox"]
 atlas = ExtResource("2_x3wgy")
 region = Rect2(384, 0, 48, 48)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_sweqm"]
+atlas = ExtResource("4_gymyn")
+region = Rect2(0, 0, 48, 68)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_ph33w"]
+atlas = ExtResource("4_gymyn")
+region = Rect2(48, 0, 48, 68)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_7ldla"]
+atlas = ExtResource("4_gymyn")
+region = Rect2(96, 0, 48, 68)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_r7t2e"]
+atlas = ExtResource("4_gymyn")
+region = Rect2(144, 0, 48, 68)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_nmr2m"]
+atlas = ExtResource("4_gymyn")
+region = Rect2(192, 0, 48, 68)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_ax3m3"]
+atlas = ExtResource("4_gymyn")
+region = Rect2(240, 0, 48, 68)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_i3pqv"]
 atlas = ExtResource("2_fkybt")
@@ -251,6 +276,29 @@ animations = [{
 }, {
 "frames": [{
 "duration": 1.0,
+"texture": SubResource("AtlasTexture_sweqm")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_ph33w")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_7ldla")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_r7t2e")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_nmr2m")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_ax3m3")
+}],
+"loop": true,
+"name": &"DoubleJump",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
 "texture": SubResource("AtlasTexture_i3pqv")
 }, {
 "duration": 1.0,
@@ -383,7 +431,7 @@ shape = SubResource("RectangleShape2D_onrkg")
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
 sprite_frames = SubResource("SpriteFrames_urp6f")
-animation = &"Damage"
+animation = &"DoubleJump"
 
 [node name="PlayerHealthSystem" type="Node" parent="."]
 script = ExtResource("8_8erm5")

@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://wimsxruwh8p6"
-path="res://.godot/imported/Sprite-0001.png-5b58781d64c10951b92a386fb0cfe190.ctex"
+uid="uid://uclfxw7gjq6o"
+path="res://.godot/imported/rock_1.png-19698f3388effc5cb1695fd8c1aaeb66.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://Assets/Enemies/Sprite-0001.png"
-dest_files=["res://.godot/imported/Sprite-0001.png-5b58781d64c10951b92a386fb0cfe190.ctex"]
+source_file="res://Assets/Map/oak_woods_v1.0/oak_woods_v1.0/decorations/rock_1.png"
+dest_files=["res://.godot/imported/rock_1.png-19698f3388effc5cb1695fd8c1aaeb66.ctex"]
 
 [params]
 

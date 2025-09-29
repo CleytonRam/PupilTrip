@@ -1,11 +1,6 @@
 extends Node
 class_name PlayerHealthComponent
 
-
-
-@export var flashMaterial: ShaderMaterial
-@export var damageAnimationName: String = "Damage"
-
 # Configurações de saúde
 @export var max_health: int = 100
 @export var current_health: int = 100
@@ -15,6 +10,7 @@ class_name PlayerHealthComponent
 # Configurações do flash
 @export var flash_duration: float = 0.3
 @export var flash_color: Color = Color.RED
+@export var flashMaterial: ShaderMaterial
 
 var flash_intensity: float = 0.0
 var isFlashing: bool = false
@@ -22,7 +18,8 @@ var isFlashing: bool = false
 var player: CharacterBody2D
 var sprite: AnimatedSprite2D
 var originalMaterial: Material
-var healthSystem: HealthSystem  # Agora é uma variável interna
+var healthSystem: HealthSystem
+var original_modulate: Color
 
 func _ready():
 	player = get_parent()
@@ -33,8 +30,10 @@ func _ready():
 	
 	if sprite:
 		originalMaterial = sprite.material
-	if flashMaterial:
-		flashMaterial.set_shader_parameter("flash_color", flash_color)
+		original_modulate = sprite.modulate
+		print("Sprite encontrado: ", sprite.name)
+	else:
+		print("ERRO: Sprite não encontrado!")
 	
 	print("Sistema de saúde inicializado: ", getHealth(), "/", getMaxHealth())
 
@@ -64,35 +63,14 @@ func create_health_system():
 	print("HealthSystem criado como nó filho")
 
 func onDamageTaken(amount: int):
-	print("=== INICIANDO EFEITO DE DANO ===")
-	print("Player tomou ", amount, " de dano. Vida: ", getHealth(), "/", getMaxHealth())
+	print("PlayerHealthComponent: Dano recebido: ", amount)
 	
-	# Toca animação de dano
-	if sprite and sprite.sprite_frames.has_animation("Damage"):
-		print("Tocando animação de dano")
-		sprite.play("Damage")
-	else:
-		print("AVISO: Animação de dano não encontrada")
-	
-	# Efeito visual de flash
-	if sprite and flashMaterial:
-		print("Iniciando efeito de flash")
-		start_flash_effect()
-	else:
-		print("AVISO: Sprite ou FlashMaterial não encontrado")
-		print("Sprite: ", sprite)
-		print("FlashMaterial: ", flashMaterial)
+	# Apenas lida com os efeitos visuais, a animação será controlada pelo player.gd
+	start_flash_effect()
 	
 	# Efeito de tela tremer
 	if get_tree().has_group("camera"):
 		get_tree().call_group("camera", "add_trauma", 0.3)
-		print("Chamando efeito de camera shake")
-	else:
-		print("AVISO: Grupo 'camera' não encontrado")
-	
-	# Aguarda um tempo antes de voltar às animações normais
-	await get_tree().create_timer(0.5).timeout
-	print("=== EFEITO DE DANO FINALIZADO ===")
 
 func onHealthDepleted():
 	print("Player morreu!")
@@ -114,40 +92,32 @@ func onHealthRestored(amount: int):
 		await sprite.animation_finished
 
 func start_flash_effect():
-	print("Iniciando flash effect...")
-	if isFlashing:
-		print("Flash já está ativo, ignorando")
-		return
-	if not sprite:
-		print("ERRO: Sprite não encontrado")
-		return
-	if not flashMaterial:
-		print("ERRO: FlashMaterial não atribuído")
+	if isFlashing or not sprite:
 		return
 		
-	print("Aplicando material de flash ao sprite")
 	isFlashing = true
-	sprite.material = flashMaterial
+	print("Iniciando efeito de flash...")
 	
+	# Método simples com modulação de cor
 	var tween = create_tween()
-	print("Criando tween para animação do flash")
-	tween.parallel().tween_method(update_flash_intensity, 0.0, 1.0, 0.1)
-	tween.tween_method(update_flash_intensity, 1.0, 0.0, 0.4)
+	tween.set_trans(Tween.TRANS_SINE)
+	
+	# Pisca para a cor do flash e volta
+	tween.tween_property(sprite, "modulate", flash_color, 0.1)
+	tween.tween_property(sprite, "modulate", original_modulate, 0.4)
 	tween.tween_callback(end_flash_effect)
-
-func update_flash_intensity(value: float):
-	print("Atualizando intensidade do flash para: ", value)
-	flash_intensity = value
-	if flashMaterial:
-		flashMaterial.set_shader_parameter("intensity", flash_intensity)
-	else:
-		print("ERRO: FlashMaterial é nulo durante a atualização")
+	
+	print("Efeito de flash iniciado com sucesso!")
 
 func end_flash_effect():
-	print("Finalizando efeito de flash")
 	if sprite:
-		sprite.material = null
+		sprite.modulate = original_modulate
 	isFlashing = false
+	print("Efeito de flash finalizado")
+
+# Método para obter o HealthSystem (para conexão de sinais)
+func get_health_system() -> HealthSystem:
+	return healthSystem
 
 # Métodos para interface com o HealthSystem
 func takeDamage(amount: int) -> bool:
