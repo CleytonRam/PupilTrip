@@ -1,8 +1,9 @@
-[gd_scene load_steps=67 format=3 uid="uid://bjdxbvqcarpsq"]
+[gd_scene load_steps=75 format=3 uid="uid://bjdxbvqcarpsq"]
 
 [ext_resource type="Script" uid="uid://c2aep13oy686y" path="res://Scripts/player.gd" id="1_vgqql"]
 [ext_resource type="Texture2D" uid="uid://b6ligaj0erl7t" path="res://Assets/2D-Pixel-Art-Character-Template/Hurt-Damaged/Player Hurt 48x48.png" id="2_3smsa"]
 [ext_resource type="Texture2D" uid="uid://cj3u1slio58tg" path="res://Assets/2D-Pixel-Art-Character-Template/Idle/Player Idle 48x48.png" id="2_fkybt"]
+[ext_resource type="Texture2D" uid="uid://18f2pov061kt" path="res://Assets/2D-Pixel-Art-Character-Template/Sword Attack/player sword atk 64x64.png" id="2_pu2lt"]
 [ext_resource type="Texture2D" uid="uid://d5svg3yyk813" path="res://Assets/2D-Pixel-Art-Character-Template/Dash/dash.png" id="2_x3wgy"]
 [ext_resource type="Texture2D" uid="uid://cs330g6ny5d8n" path="res://Assets/2D-Pixel-Art-Character-Template/Jump/player jump left 48x48-sheet.png" id="3_vgqql"]
 [ext_resource type="Texture2D" uid="uid://0mn3phe6r6ge" path="res://Assets/2D-Pixel-Art-Character-Template/Land/player land 48x48.png" id="4_fkybt"]
@@ -14,6 +15,30 @@
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_onrkg"]
 size = Vector2(19, 29)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_3vlem"]
+atlas = ExtResource("2_pu2lt")
+region = Rect2(0, 0, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_8eeqe"]
+atlas = ExtResource("2_pu2lt")
+region = Rect2(64, 0, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_5x828"]
+atlas = ExtResource("2_pu2lt")
+region = Rect2(128, 0, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_c1k8q"]
+atlas = ExtResource("2_pu2lt")
+region = Rect2(192, 0, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_e6mvm"]
+atlas = ExtResource("2_pu2lt")
+region = Rect2(256, 0, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_57lvd"]
+atlas = ExtResource("2_pu2lt")
+region = Rect2(320, 0, 64, 64)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_11gg7"]
 atlas = ExtResource("2_3smsa")
@@ -227,6 +252,29 @@ region = Rect2(336, 0, 48, 48)
 animations = [{
 "frames": [{
 "duration": 1.0,
+"texture": SubResource("AtlasTexture_3vlem")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_8eeqe")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_5x828")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_c1k8q")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_e6mvm")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_57lvd")
+}],
+"loop": true,
+"name": &"Attack",
+"speed": 10.0
+}, {
+"frames": [{
+"duration": 1.0,
 "texture": SubResource("AtlasTexture_11gg7")
 }, {
 "duration": 1.0,
@@ -422,6 +470,9 @@ shader = ExtResource("9_tx1dd")
 shader_parameter/intensity = 0.736
 shader_parameter/flash_color = Color(1, 0, 0, 1)
 
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_gymyn"]
+size = Vector2(27, 24)
+
 [node name="CharacterBody2D" type="CharacterBody2D"]
 script = ExtResource("1_vgqql")
 
@@ -431,7 +482,7 @@ shape = SubResource("RectangleShape2D_onrkg")
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
 sprite_frames = SubResource("SpriteFrames_urp6f")
-animation = &"DoubleJump"
+animation = &"Attack"
 
 [node name="PlayerHealthSystem" type="Node" parent="."]
 script = ExtResource("8_8erm5")
@@ -439,3 +490,12 @@ flashMaterial = SubResource("ShaderMaterial_gymyn")
 
 [node name="HealthSystem" type="Node" parent="."]
 script = ExtResource("9_f1ek2")
+
+[node name="AttackArea" type="Area2D" parent="."]
+position = Vector2(18, 0)
+
+[node name="Hitbox" type="CollisionShape2D" parent="AttackArea"]
+shape = SubResource("RectangleShape2D_gymyn")
+
+[connection signal="animation_finished" from="AnimatedSprite2D" to="." method="_on_animated_sprite_2d_animation_finished"]
+[connection signal="body_entered" from="AttackArea" to="." method="_on_attack_area_body_entered"]

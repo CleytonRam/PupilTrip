@@ -1,10 +1,11 @@
-[gd_scene load_steps=8 format=4 uid="uid://c2hqti7epk4a7"]
+[gd_scene load_steps=9 format=4 uid="uid://c2hqti7epk4a7"]
 
 [ext_resource type="PackedScene" uid="uid://bjdxbvqcarpsq" path="res://Scenes/player.tscn" id="1_0ksc7"]
 [ext_resource type="Texture2D" uid="uid://b6jfsi0ro4djw" path="res://Assets/Map/oak_woods_v1.0/oak_woods_v1.0/oak_woods_tileset.png" id="1_rnicq"]
 [ext_resource type="Script" uid="uid://cn0udmc87a6bj" path="res://tileMapLayer.gd" id="3_phajf"]
 [ext_resource type="Script" uid="uid://bn053lnhxic87" path="res://Scripts/camera2d.gd" id="4_3rq1n"]
 [ext_resource type="PackedScene" uid="uid://bq1pxr0fosu5p" path="res://Scenes/Collectible.tscn" id="5_rnicq"]
+[ext_resource type="PackedScene" uid="uid://du1idngfj4hdp" path="res://enemy1.tscn" id="6_phajf"]
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_phajf"]
 texture = ExtResource("1_rnicq")
@@ -829,12 +830,11 @@ tile_set = SubResource("TileSet_2qc8q")
 script = ExtResource("3_phajf")
 
 [node name="CharacterBody2D" parent="." instance=ExtResource("1_0ksc7")]
+position = Vector2(358, 303)
 collision_mask = 2
 
-[node name="AnimatedSprite2D" parent="CharacterBody2D" index="1"]
-animation = &"Land"
-
-[node name="Camera2D" type="Camera2D" parent="." node_paths=PackedStringArray("target")]
+[node name="Camera2D" type="Camera2D" parent="." node_paths=PackedStringArray("target") groups=["camera"]]
+position = Vector2(358, 303)
 script = ExtResource("4_3rq1n")
 target = NodePath("../CharacterBody2D")
 
@@ -846,4 +846,5 @@ abilityType = "coke_dash"
 position = Vector2(-259, 275)
 abilityType = "meth_jump"
 
-[editable path="CharacterBody2D"]
+[node name="Enemie" parent="." instance=ExtResource("6_phajf")]
+position = Vector2(755, 301)
