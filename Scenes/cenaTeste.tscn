@@ -1,4 +1,4 @@
-[gd_scene load_steps=9 format=4 uid="uid://c2hqti7epk4a7"]
+[gd_scene load_steps=10 format=4 uid="uid://c2hqti7epk4a7"]
 
 [ext_resource type="PackedScene" uid="uid://bjdxbvqcarpsq" path="res://Scenes/player.tscn" id="1_0ksc7"]
 [ext_resource type="Texture2D" uid="uid://b6jfsi0ro4djw" path="res://Assets/Map/oak_woods_v1.0/oak_woods_v1.0/oak_woods_tileset.png" id="1_rnicq"]
@@ -6,6 +6,7 @@
 [ext_resource type="Script" uid="uid://bn053lnhxic87" path="res://Scripts/camera2d.gd" id="4_3rq1n"]
 [ext_resource type="PackedScene" uid="uid://bq1pxr0fosu5p" path="res://Scenes/Collectible.tscn" id="5_rnicq"]
 [ext_resource type="PackedScene" uid="uid://du1idngfj4hdp" path="res://enemy1.tscn" id="6_phajf"]
+[ext_resource type="PackedScene" uid="uid://tbdehnmh8rxw" path="res://HUD.tscn" id="7_3rq1n"]
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_phajf"]
 texture = ExtResource("1_rnicq")
@@ -848,3 +849,5 @@ abilityType = "meth_jump"
 
 [node name="Enemie" parent="." instance=ExtResource("6_phajf")]
 position = Vector2(755, 301)
+
+[node name="CanvasLayer" parent="." instance=ExtResource("7_3rq1n")]
