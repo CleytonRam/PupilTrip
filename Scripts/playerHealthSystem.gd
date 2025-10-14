@@ -69,8 +69,8 @@ func onDamageTaken(amount: int):
 	start_flash_effect()
 	
 	# Efeito de tela tremer
-	if get_tree().has_group("camera"):
-		get_tree().call_group("camera", "add_trauma", 0.3)
+	# if get_tree().has_group("camera"):
+	# 	get_tree().call_group("camera", "add_trauma", 0.3)
 
 func onHealthDepleted():
 	print("Player morreu!")

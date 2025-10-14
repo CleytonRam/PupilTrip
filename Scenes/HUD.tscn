@@ -1,7 +1,8 @@
-[gd_scene load_steps=15 format=3 uid="uid://tbdehnmh8rxw"]
+[gd_scene load_steps=24 format=3 uid="uid://tbdehnmh8rxw"]
 
-[ext_resource type="Script" uid="uid://bshvk3ijho02s" path="res://hud.gd" id="1_efote"]
+[ext_resource type="Script" uid="uid://bshvk3ijho02s" path="res://Scripts/hud.gd" id="1_efote"]
 [ext_resource type="Texture2D" uid="uid://df4y3n3birv5v" path="res://Assets/HUD FEATURES/Sprite-0002.png" id="1_k5de2"]
+[ext_resource type="Texture2D" uid="uid://b72uowxe1chh5" path="res://Assets/HUD FEATURES/Pixel UI pack 3/BarraDeVida.png" id="3_vow1y"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_efote"]
 atlas = ExtResource("1_k5de2")
@@ -88,6 +89,63 @@ animations = [{
 "speed": 7.0
 }]
 
+[sub_resource type="AtlasTexture" id="AtlasTexture_x6is5"]
+atlas = ExtResource("3_vow1y")
+region = Rect2(0, 0, 48, 16)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_d5xqv"]
+atlas = ExtResource("3_vow1y")
+region = Rect2(48, 0, 48, 16)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_41shd"]
+atlas = ExtResource("3_vow1y")
+region = Rect2(96, 0, 48, 16)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_cb8im"]
+atlas = ExtResource("3_vow1y")
+region = Rect2(144, 0, 48, 16)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_ptsyy"]
+atlas = ExtResource("3_vow1y")
+region = Rect2(192, 0, 48, 16)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_hq1op"]
+atlas = ExtResource("3_vow1y")
+region = Rect2(240, 0, 48, 16)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_kxho0"]
+atlas = ExtResource("3_vow1y")
+region = Rect2(288, 0, 48, 16)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_kxho0"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_x6is5")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_d5xqv")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_41shd")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_cb8im")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_ptsyy")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_hq1op")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_kxho0")
+}],
+"loop": true,
+"name": &"default",
+"speed": 8.0
+}]
+
 [node name="CanvasLayer" type="CanvasLayer"]
 script = ExtResource("1_efote")
 
@@ -96,3 +154,8 @@ position = Vector2(23, 24)
 sprite_frames = SubResource("SpriteFrames_x6is5")
 animation = &"Normal"
 frame_progress = 0.289099
+
+[node name="HealthBar" type="AnimatedSprite2D" parent="."]
+position = Vector2(96.25, 18)
+scale = Vector2(2.53125, 1.5625)
+sprite_frames = SubResource("SpriteFrames_kxho0")

@@ -1,5 +1,7 @@
 extends CharacterBody2D
 
+signal health_updated(current_health, max_health)
+
 @export var speed: float = 200.0
 @export var jumpForce: float = -400.0
 @export var gravity: float = 1000.0
@@ -10,6 +12,12 @@ extends CharacterBody2D
 @export var attackTime: float = 0.55
 @export var hitstop_duration: float = 0.08
 
+# ---------- SISTEMA DE VIDA SIMPLES ----------
+@export var max_health: int = 100
+var current_health: int = 100
+@export var invincibility_time: float = 0.5
+var invincibility_timer: float = 0.0
+var is_invincible: bool = false
 
 @onready var animatedSprite = $AnimatedSprite2D
 
@@ -63,15 +71,16 @@ func _ready():
 	add_to_group("player")
 	add_to_group("pausable")
 	
+	# Inicializa saúde
+	current_health = max_health
+	
 	# Conecta o sinal de animation_finished se não estiver conectado
 	if not animatedSprite.animation_finished.is_connected(_on_animated_sprite_2d_animation_finished):
 		animatedSprite.animation_finished.connect(_on_animated_sprite_2d_animation_finished)
 	
-	# Garante que o PlayerHealthComponent existe
-	setup_health_component()
-	setup_attack_area()  # ⬅️ DESCOMENTA ESTA LINHA
+	setup_attack_area()
 	
-	print("Vida inicial: ", get_health(), "/", get_max_health())
+	print("Vida inicial: ", current_health, "/", max_health)
 
 func setup_attack_area():
 	# Inicia com a área desativada
@@ -80,38 +89,13 @@ func setup_attack_area():
 	if not $AttackArea.body_entered.is_connected(_on_attack_area_body_entered):
 		$AttackArea.body_entered.connect(_on_attack_area_body_entered)
 
-func setup_health_component():
-	# Verifica se o PlayerHealthComponent já existe
-	if not has_node("PlayerHealthComponent"):
-		print("Criando PlayerHealthComponent automaticamente...")
-		
-		# Cria um novo nó PlayerHealthComponent
-		var health_component = Node.new()
-		health_component.name = "PlayerHealthComponent"
-		health_component.set_script(load("res://Scripts/playerHealthSystem.gd"))
-		add_child(health_component)
-		
-		# Configura as propriedades exportadas
-		health_component.max_health = 100
-		health_component.current_health = 100
-		
-		# Conecta o sinal de dano
-		if health_component.has_method("get_health_system"):
-			var health_system = health_component.get_health_system()
-			if health_system and health_system.has_signal("damageTaken"):
-				health_system.damageTaken.connect(_on_player_damage_taken)
-		
-		print("PlayerHealthComponent criado com sucesso!")
-	else:
-		print("PlayerHealthComponent encontrado!")
-		# Conecta o sinal de dano se já existir
-		var health_component = $PlayerHealthComponent
-		if health_component.has_method("get_health_system"):
-			var health_system = health_component.get_health_system()
-			if health_system and health_system.has_signal("damageTaken"):
-				health_system.damageTaken.connect(_on_player_damage_taken)
-
 func _physics_process(delta):
+	# Atualizar invencibilidade
+	if invincibility_timer > 0:
+		invincibility_timer -= delta
+		if invincibility_timer <= 0:
+			is_invincible = false
+	
 	# Atualizar cooldowns
 	if visionCooldown > 0:
 		visionCooldown -= delta
@@ -127,13 +111,13 @@ func _physics_process(delta):
 	
 	wasOnFloor = is_on_floor()
 	
-	# Máquina de estados principal - CORRIGIDA
+	# Máquina de estados principal
 	match current_state:
 		PlayerState.DASHING:
 			handle_dash_state(delta)
 		PlayerState.TAKING_DAMAGE:
 			handle_damage_state(delta)
-		PlayerState.ATTACKING:  # ⬅️ ADICIONA ESTE ESTADO
+		PlayerState.ATTACKING:
 			handle_attack_state(delta)
 		PlayerState.USING_ABILITY:
 			# Estado para habilidades que requerem controle especial
@@ -183,7 +167,7 @@ func handle_normal_state(delta):
 	
 	if test_mode and Input.is_action_just_pressed("test_damage"):
 		take_damage(10)
-		print("Dano de teste aplicado! Vida: ", get_health(), "/", get_max_health())
+		print("Dano de teste aplicado! Vida: ", current_health, "/", max_health)
 	
 	move_and_slide()
 	
@@ -210,7 +194,7 @@ func handle_dash_state(delta):
 	
 	move_and_slide()
 
-func handle_attack_state(delta):  # ⬅️ FUNÇÃO NOVA COMPLETA
+func handle_attack_state(delta):
 	# Apenas aplica gravidade durante o ataque
 	if not is_on_floor():
 		velocity.y += gravity * delta
@@ -249,8 +233,43 @@ func update_hitbox_direction(direction: float):
 	var current_x_pos = $AttackArea.position.x
 	$AttackArea.position.x = abs(current_x_pos) * direction
 
+# ========== SISTEMA DE DANO SIMPLES ==========
+func take_damage(amount: int) -> bool:
+	if is_invincible or current_state == PlayerState.DASHING:
+		return false
+	
+	current_health -= amount
+	current_health = max(0, current_health)
+	
+	# Emite sinal de vida alterada
+	health_updated.emit(current_health, max_health)
+	
+	print("Player tomou dano: ", amount, ". Vida: ", current_health, "/", max_health)
+	
+	# Ativa estado de dano
+	_on_player_damage_taken(amount)
+	
+	# Ativa invencibilidade
+	is_invincible = true
+	invincibility_timer = invincibility_time
+	
+	return current_health <= 0
+
+func heal(amount: int) -> bool:
+	if current_health >= max_health:
+		return false
+	
+	current_health += amount
+	current_health = min(current_health, max_health)
+	
+	# Emite sinal de vida alterada
+	health_updated.emit(current_health, max_health)
+	
+	print("Player curado: ", amount, ". Vida: ", current_health, "/", max_health)
+	return true
+
 func _on_player_damage_taken(amount: int):
-	print("Recebendo sinal de dano: ", amount)
+	print("Recebendo dano: ", amount)
 	
 	# Marca que a animação de dano está acontecendo
 	damage_animation_finished = false
@@ -407,27 +426,11 @@ func createSmokeEffect():
 func createUnlockEffect(abilityType: String):
 	print("Efeito de desbloqueio para: ", abilityType)
 
-func take_damage(amount: int) -> bool:
-	if has_node("PlayerHealthComponent"):
-		return $PlayerHealthComponent.takeDamage(amount)
-	else:
-		print("ERRO: PlayerHealthComponent não encontrado ao tentar causar dano!")
-		return false
-
-func heal(amount: int) -> bool:
-	if has_node("PlayerHealthComponent"):
-		return $PlayerHealthComponent.restoreHealth(amount)
-	return false
-
 func get_health() -> int:
-	if has_node("PlayerHealthComponent"):
-		return $PlayerHealthComponent.getHealth()
-	return 0
+	return current_health
 
 func get_max_health() -> int:
-	if has_node("PlayerHealthComponent"):
-		return $PlayerHealthComponent.getMaxHealth()
-	return 0
+	return max_health
 
 func _on_attack_area_body_entered(body: Node2D) -> void:
 	if body != self and body.is_in_group("enemies"):
@@ -438,7 +441,6 @@ func _on_attack_area_body_entered(body: Node2D) -> void:
 			HitstopManager.activate_hitstop(hitstop_duration, [self, body])
 			
 			print("Ataque acertou: ", body.name, " - Dano: ", attackDamage)
-
 
 func _on_animated_sprite_2d_animation_finished() -> void:
 	if animatedSprite.animation == "Attack":
@@ -455,6 +457,7 @@ func _on_animated_sprite_2d_animation_finished() -> void:
 func get_attack_direction() -> float:
 	"""Retorna a direção do ataque (1 para direita, -1 para esquerda)"""
 	return -1 if animatedSprite.flip_h else 1
+
 func calculate_damage() -> int:
 	var base_damage = attackDamage
 	# Adicione variações aqui (crítico, aleatório, etc.)
